@@ -4,7 +4,7 @@ A simple Python script that can create a **Ace Attorney** styled subtitle.
 
 ## Example
 
-<video src="./example/helloworld.mov"></video>
+[Example Video](./example/helloworld.mov)
 
 ## Requirements
 
