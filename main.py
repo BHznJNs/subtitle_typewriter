@@ -5,19 +5,24 @@ from moviepy import *
 TEMP_DIR = "./temp/"
 SOUND = "./resources/sfx-blipmale.wav"
 FONT = "./resources/chinese.msyh.ttf"
-FONT_SIZE = 108
+FONT_SIZE = 144
+STROKE_WIDTH = 6
+ALIGNMENT = 'left'
 
 def text_clip_factory(text: str, start: int | float, end: int | float) -> TextClip:
+    TextClip.resized
     clip = TextClip(
         font=FONT,
         text=text,
         font_size=FONT_SIZE,
         color="#fff",
         stroke_color="#000",
-        stroke_width=2,
-        text_align="center",
+        stroke_width=STROKE_WIDTH,
+        text_align=ALIGNMENT,
+        margin=(STROKE_WIDTH * 2, STROKE_WIDTH * 2),
     ).with_start(start)\
-     .with_end(end)
+     .with_end(end)\
+     .with_position('center')
     return clip
 
 def generate_video_clip(text: str, char_duration_second: int | float) -> CompositeVideoClip:
@@ -31,10 +36,8 @@ def generate_video_clip(text: str, char_duration_second: int | float) -> Composi
             end=current_duration + char_duration_second,
         ))
         current_duration += char_duration_second
-    final_video = CompositeVideoClip(
-        text_clips,
-        size=text_clips[-1].size, # `clips[-1].size`: use the size of last clip
-    )
+    last_clip_size = text_clips[-1].size
+    final_video = CompositeVideoClip(text_clips, size=last_clip_size)
     return final_video
 
 def generate_sound_clip(text: str, char_duration_second: int | float) -> str:
@@ -64,8 +67,8 @@ def write_video_clip(clip: CompositeVideoClip, output: str):
     )
 
 if __name__ == "__main__":
-    text = "你好，世界！ Hello, World!"
-    output = "./out.mov"
+    text = "这是一张 NFC 贴纸"
+    output = "./{}.mov".format(text.replace('/', '-').replace('\\', '-'))
     char_duration = .2
 
     if not os.path.exists(TEMP_DIR):
