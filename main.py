@@ -8,6 +8,7 @@ FONT = "./resources/chinese.msyh.ttf"
 FONT_SIZE = 144
 STROKE_WIDTH = 6
 ALIGNMENT = 'left'
+EXTRA_DURATION = 2
 
 def text_clip_factory(text: str, start: int | float, end: int | float) -> TextClip:
     TextClip.resized
@@ -36,6 +37,7 @@ def generate_video_clip(text: str, char_duration_second: int | float) -> Composi
             end=current_duration + char_duration_second,
         ))
         current_duration += char_duration_second
+    text_clips[-1] = text_clips[-1].with_duration(EXTRA_DURATION)
     last_clip_size = text_clips[-1].size
     final_video = CompositeVideoClip(text_clips, size=last_clip_size)
     return final_video
@@ -67,7 +69,7 @@ def write_video_clip(clip: CompositeVideoClip, output: str):
     )
 
 if __name__ == "__main__":
-    text = "这是一张 NFC 贴纸"
+    text = "Hello World!"
     output = "./{}.mov".format(text.replace('/', '-').replace('\\', '-'))
     char_duration = .2
 
